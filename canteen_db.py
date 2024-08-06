@@ -1,3 +1,4 @@
+import os
 import random
 import sqlite3
 import json
@@ -9,6 +10,7 @@ class CanteenDataBase:
         self.conn.text_factory = str
         self.c = self.conn.cursor()
         self.create_db()
+        self.load_default_data()
 
     def create_db(self):
         """创建数据库"""
@@ -19,6 +21,20 @@ class CanteenDataBase:
         """
         )
         self.conn.commit()
+
+    def load_default_data(self):
+        """加载默认数据"""
+        if not os.path.exists("canteens_dataset.json"):
+            return
+        with open("canteens_dataset.json", "r", encoding="utf-8") as file:
+            default_canteens = json.load(file)
+            for canteen_name, floors in default_canteens.items():
+                for floor in floors["楼层"]:
+                    self.insert_canteen(
+                        canteen_name,
+                        floor["楼层号"],
+                        floor["档口"]
+                    )
 
     def insert_canteen(self, canteen_name, floor_number, stalls):
         """插入食堂信息"""
@@ -34,7 +50,8 @@ class CanteenDataBase:
 
     def select_canteen(self, canteen_name):
         """查询食堂信息"""
-        self.c.execute("SELECT * FROM Canteens WHERE canteen_name = ?", (canteen_name,))
+        self.c.execute("SELECT * FROM Canteens WHERE canteen_name = ?",
+                       (canteen_name,))
         return self.c.fetchall()
 
     def update_canteen(self, canteen_name, floor_number, stalls):
@@ -55,7 +72,8 @@ class CanteenDataBase:
 
     def random_select_stall(self):
         """从所有食堂中随机选择一个档口"""
-        self.c.execute("SELECT canteen_name, floor_number, stalls FROM Canteens")
+        self.c.execute("SELECT canteen_name, floor_number,"
+                       " stalls FROM Canteens")
         all_canteens = self.c.fetchall()
         if not all_canteens:
             return None

@@ -17,15 +17,21 @@ class CanteenGUI:
         input_frame.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
 
         # 创建输入字段
-        ttk.Label(input_frame, text="食堂名称:").grid(row=0, column=0, sticky="e", padx=5, pady=5)
+        ttk.Label(input_frame, text="食堂名称:").grid(
+            row=0, column=0, sticky="e", padx=5, pady=5
+        )
         self.canteen_name = ttk.Entry(input_frame)
         self.canteen_name.grid(row=0, column=1, sticky="w", padx=5, pady=5)
 
-        ttk.Label(input_frame, text="楼层:").grid(row=1, column=0, sticky="e", padx=5, pady=5)
+        ttk.Label(input_frame, text="楼层:").grid(
+            row=1, column=0, sticky="e", padx=5, pady=5
+        )
         self.floor_number = ttk.Entry(input_frame)
         self.floor_number.grid(row=1, column=1, sticky="w", padx=5, pady=5)
 
-        ttk.Label(input_frame, text="档口(用逗号分隔):").grid(row=2, column=0, sticky="e", padx=5, pady=5)
+        ttk.Label(input_frame, text="档口(用逗号分隔):").grid(
+            row=2, column=0, sticky="e", padx=5, pady=5
+        )
         self.stalls = ttk.Entry(input_frame, width=40)
         self.stalls.grid(row=2, column=1, sticky="w", padx=5, pady=5)
 
@@ -33,11 +39,21 @@ class CanteenGUI:
         button_frame = ttk.Frame(self.master)
         button_frame.grid(row=1, column=0, padx=10, pady=10, sticky="nsew")
 
-        ttk.Button(button_frame, text="添加", command=self.add_canteen).grid(row=0, column=0, padx=5, pady=5)
-        ttk.Button(button_frame, text="查询", command=self.query_canteen).grid(row=0, column=1, padx=5, pady=5)
-        ttk.Button(button_frame, text="更新", command=self.update_canteen).grid(row=0, column=2, padx=5, pady=5)
-        ttk.Button(button_frame, text="删除", command=self.delete_canteen).grid(row=0, column=3, padx=5, pady=5)
-        ttk.Button(button_frame, text="随机选择", command=self.random_select).grid(row=0, column=4, padx=5, pady=5)
+        ttk.Button(button_frame, text="添加", command=self.add_canteen).grid(
+            row=0, column=0, padx=5, pady=5
+        )
+        ttk.Button(button_frame, text="查询", command=self.query_canteen).grid(
+            row=0, column=1, padx=5, pady=5
+        )
+        ttk.Button(button_frame, text="更新", command=self.update_canteen).grid(
+            row=0, column=2, padx=5, pady=5
+        )
+        ttk.Button(button_frame, text="删除", command=self.delete_canteen).grid(
+            row=0, column=3, padx=5, pady=5
+        )
+        ttk.Button(button_frame, text="随机选择", command=self.random_select).grid(
+            row=0, column=4, padx=5, pady=5
+        )
 
         # 创建结果显示区
         result_frame = ttk.LabelFrame(self.master, text="今天在这儿吃：")
@@ -53,7 +69,7 @@ class CanteenGUI:
     def add_canteen(self):
         name = self.canteen_name.get()
         floor = self.floor_number.get()
-        stalls = [s.strip() for s in self.stalls.get().split(',')]
+        stalls = [s.strip() for s in self.stalls.get().split(",")]
 
         if name and floor and stalls:
             if self.canteen.insert_canteen(name, int(floor), stalls):
@@ -71,14 +87,16 @@ class CanteenGUI:
             results = self.canteen.select_canteen(name)
             self.result_text.delete(1.0, tk.END)
             for result in results:
-                self.result_text.insert(tk.END, f"{result[0]} {result[1]}楼 档口: {result[2]}\n")
+                self.result_text.insert(
+                    tk.END, f"{result[0]} {result[1]}楼 档口: {result[2]}\n"
+                )
         else:
             messagebox.showerror("错误", "请输入食堂名称")
 
     def update_canteen(self):
         name = self.canteen_name.get()
         floor = self.floor_number.get()
-        stalls = [s.strip() for s in self.stalls.get().split(',')]
+        stalls = [s.strip() for s in self.stalls.get().split(",")]
 
         if name and floor and stalls:
             self.canteen.update_canteen(name, int(floor), stalls)

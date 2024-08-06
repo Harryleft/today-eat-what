@@ -2,25 +2,31 @@ import random
 import sqlite3
 import json
 
+
 class CanteenDataBase:
     def __init__(self):
-        self.conn = sqlite3.connect('canteens.db')
+        self.conn = sqlite3.connect("canteens.db")
         self.conn.text_factory = str
         self.c = self.conn.cursor()
         self.create_db()
 
     def create_db(self):
         """创建数据库"""
-        self.c.execute('''
+        self.c.execute(
+            """
             CREATE TABLE IF NOT EXISTS Canteens
             (canteen_name text, floor_number integer, stalls text, PRIMARY KEY (canteen_name, floor_number))
-        ''')
+        """
+        )
         self.conn.commit()
 
     def insert_canteen(self, canteen_name, floor_number, stalls):
         """插入食堂信息"""
         try:
-            self.c.execute("INSERT INTO Canteens VALUES (?, ?, ?)", (canteen_name, floor_number, json.dumps(stalls)))
+            self.c.execute(
+                "INSERT INTO Canteens VALUES (?, ?, ?)",
+                (canteen_name, floor_number, json.dumps(stalls)),
+            )
             self.conn.commit()
             return True
         except sqlite3.IntegrityError:
@@ -33,13 +39,18 @@ class CanteenDataBase:
 
     def update_canteen(self, canteen_name, floor_number, stalls):
         """更新食堂信息"""
-        self.c.execute("UPDATE Canteens SET stalls = ? WHERE canteen_name = ? AND floor_number = ?",
-                       (json.dumps(stalls), canteen_name, floor_number))
+        self.c.execute(
+            "UPDATE Canteens SET stalls = ? WHERE canteen_name = ? AND floor_number = ?",
+            (json.dumps(stalls), canteen_name, floor_number),
+        )
         self.conn.commit()
 
     def delete_canteen(self, canteen_name, floor_number):
         """删除食堂信息"""
-        self.c.execute("DELETE FROM Canteens WHERE canteen_name = ? AND floor_number = ?", (canteen_name, floor_number))
+        self.c.execute(
+            "DELETE FROM Canteens WHERE canteen_name = ? AND floor_number = ?",
+            (canteen_name, floor_number),
+        )
         self.conn.commit()
 
     def random_select_stall(self):
@@ -56,7 +67,3 @@ class CanteenDataBase:
     def close(self):
         """关闭连接"""
         self.conn.close()
-
-
-
-

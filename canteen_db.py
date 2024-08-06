@@ -1,0 +1,62 @@
+import random
+import sqlite3
+import json
+
+class CanteenDataBase:
+    def __init__(self):
+        self.conn = sqlite3.connect('canteens.db')
+        self.conn.text_factory = str
+        self.c = self.conn.cursor()
+        self.create_db()
+
+    def create_db(self):
+        """创建数据库"""
+        self.c.execute('''
+            CREATE TABLE IF NOT EXISTS Canteens
+            (canteen_name text, floor_number integer, stalls text, PRIMARY KEY (canteen_name, floor_number))
+        ''')
+        self.conn.commit()
+
+    def insert_canteen(self, canteen_name, floor_number, stalls):
+        """插入食堂信息"""
+        try:
+            self.c.execute("INSERT INTO Canteens VALUES (?, ?, ?)", (canteen_name, floor_number, json.dumps(stalls)))
+            self.conn.commit()
+            return True
+        except sqlite3.IntegrityError:
+            return False
+
+    def select_canteen(self, canteen_name):
+        """查询食堂信息"""
+        self.c.execute("SELECT * FROM Canteens WHERE canteen_name = ?", (canteen_name,))
+        return self.c.fetchall()
+
+    def update_canteen(self, canteen_name, floor_number, stalls):
+        """更新食堂信息"""
+        self.c.execute("UPDATE Canteens SET stalls = ? WHERE canteen_name = ? AND floor_number = ?",
+                       (json.dumps(stalls), canteen_name, floor_number))
+        self.conn.commit()
+
+    def delete_canteen(self, canteen_name, floor_number):
+        """删除食堂信息"""
+        self.c.execute("DELETE FROM Canteens WHERE canteen_name = ? AND floor_number = ?", (canteen_name, floor_number))
+        self.conn.commit()
+
+    def random_select_stall(self):
+        """从所有食堂中随机选择一个档口"""
+        self.c.execute("SELECT canteen_name, floor_number, stalls FROM Canteens")
+        all_canteens = self.c.fetchall()
+        if not all_canteens:
+            return None
+        canteen_name, floor_number, stalls = random.choice(all_canteens)
+        stalls = json.loads(stalls)
+        stall = random.choice(stalls)
+        return f"{canteen_name}{floor_number}楼{stall}"
+
+    def close(self):
+        """关闭连接"""
+        self.conn.close()
+
+
+
+

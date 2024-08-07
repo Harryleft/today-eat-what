@@ -48,11 +48,31 @@ class CanteenDataBase:
         except sqlite3.IntegrityError:
             return False
 
-    def select_canteen(self, canteen_name):
+    def select_canteen(self, canteen_name=None, floor_number=None,
+                       stall_name=None):
         """查询食堂信息"""
-        self.c.execute("SELECT * FROM Canteens WHERE canteen_name = ?",
-                       (canteen_name,))
-        return self.c.fetchall()
+        query = "SELECT * FROM Canteens WHERE 1=1"
+        params = []
+
+        if canteen_name:
+            query += " AND canteen_name = ?"
+            params.append(canteen_name)
+        if floor_number:
+            query += " AND floor_number = ?"
+            params.append(floor_number)
+        if stall_name:
+            query += " AND stalls LIKE ?"
+            params.append(f"%{stall_name}%")
+
+        self.c.execute(query, params)
+        results = self.c.fetchall()
+        decoded_results = []
+        for result in results:
+            canteen_name, floor_number, stalls = result
+            decoded_stalls = json.loads(stalls)
+            decoded_results.append(
+                (canteen_name, floor_number, decoded_stalls))
+        return decoded_results
 
     def update_canteen(self, canteen_name, floor_number, stalls):
         """更新食堂信息"""

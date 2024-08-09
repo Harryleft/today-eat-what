@@ -1,5 +1,5 @@
-## 目的
-为患有选择困难症的高校学生，特别是那些在决策“今天吃什么”方面遇到困难的用户。通过提供快速、随机的餐饮选择，帮助用户轻松解决用餐难题。
+## 开发目的
+为那些在决策“今天吃什么”方面遇到困难的用户。通过提供快速、随机的餐饮选择，帮助用户轻松解决用餐难题。
 
 ## 环境要求
 - Python 3.8+
@@ -28,7 +28,8 @@ project_root/
 │   ├── canteen_dataset.json
 │   ├── canteens.db
 ├── requirements.txt
-└── README.md
+├── README.md
+└── LICENSE.md
 ```
 ## 自定义指南
 1. 修改或添加食堂：修改`src/config.py`文件中的`CANTEEN_NAMES`数组

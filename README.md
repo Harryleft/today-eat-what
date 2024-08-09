@@ -49,13 +49,10 @@ project_root/
 - 用户可以从所有地点或指定地点中快速、随机选择一条餐饮信息。
 - 示例输出格式为：_食堂-楼层-菜品_。
 
-![image](https://github.com/user-attachments/assets/f2c3d673-567a-4689-8e5d-4fd02ef39320)
-
 2. 后台管理界面：
 - 允许用户添加、删除和查看不同地点和楼层的菜品信息。
 - 支持以 JSON 格式导入和导出数据，方便与他人共享数据。
 
-![image](https://github.com/user-attachments/assets/6ae01085-5752-4475-8357-9feef4406a93)
 
 ## 许可证
 本项目采用 MIT 许可证。

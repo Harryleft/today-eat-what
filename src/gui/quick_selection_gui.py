@@ -3,7 +3,7 @@
 import tkinter as tk
 from tkinter import ttk
 
-from src.config import CANTEEN_NAMES
+from src.config import CANTEEN_NAMES, DEFAULT_FONT
 from src.db.canteen_db import CanteenDatabase
 
 
@@ -39,6 +39,8 @@ class QuickSelectionGUI:
         # 添加进入管理界面的按钮
         ttk.Button(self.frame, text="进入后台管理界面", command=self.show_management_callback).pack(pady=10)
 
+        self.add_copyright_label()
+
     def show(self):
         self.frame.pack(fill="both", expand=True)
 
@@ -70,3 +72,8 @@ class QuickSelectionGUI:
     def display_result(self, result):
         self.result_text.delete(1.0, tk.END)
         self.result_text.insert(tk.END, result)
+
+    def add_copyright_label(self):
+        copyright_label = tk.Label(self.master, text="© Dongchao Shen",
+                                   font=("Times New Roman", 10))
+        copyright_label.pack(side="bottom", pady=5)

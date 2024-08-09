@@ -3,7 +3,7 @@ import json
 import tkinter as tk
 from tkinter import ttk, filedialog
 
-from src.config import DEFAULT_FONT, CANTEEN_NAMES, CANTEEN_FLOORS
+from src.config.config import DEFAULT_FONT, CANTEEN_NAMES, CANTEEN_FLOORS
 from src.db.canteen_db import CanteenDatabase
 
 
@@ -35,7 +35,7 @@ class CanteenManagementGUI:
         self.info_label.grid(row=0, column=3, pady=10, sticky="e")
 
         # 添加新档口
-        ttk.Label(self.frame, text="添加新档口",
+        ttk.Label(self.frame, text="添加新内容",
                   font=(DEFAULT_FONT, 12, "bold")).grid(row=1, column=0,
                                                         columnspan=4, pady=10,
                                                         sticky="w")
@@ -68,7 +68,7 @@ class CanteenManagementGUI:
                                                                          sticky="e")
 
         # 显示所有档口
-        ttk.Label(self.frame, text="所有档口",
+        ttk.Label(self.frame, text="所有信息",
                   font=(DEFAULT_FONT, 12, "bold")).grid(row=4, column=0,
                                                         columnspan=4, pady=10,
                                                         sticky="w")
@@ -89,7 +89,7 @@ class CanteenManagementGUI:
         self.load_stalls()
 
         # 删除选中的档口
-        ttk.Button(self.frame, text="删除选中的档口",
+        ttk.Button(self.frame, text="删除选中的信息",
                    command=self.delete_selected_stalls).grid(row=6, column=0,
                                                              padx=(0, 5),
                                                              pady=10,

@@ -8,7 +8,7 @@ from sqlalchemy import create_engine, func
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import sessionmaker
 from src.db.models import Base, CanteenInfo
-from src.config import DATABASE_PATH, DEFAULT_JSON_FILE
+from src.config.config import DATABASE_PATH, DEFAULT_JSON_FILE
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)

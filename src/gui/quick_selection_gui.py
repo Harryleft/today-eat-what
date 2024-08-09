@@ -3,7 +3,7 @@
 import tkinter as tk
 from tkinter import ttk
 
-from src.config import CANTEEN_NAMES, DEFAULT_FONT
+from src.config.config import CANTEEN_NAMES
 from src.db.canteen_db import CanteenDatabase
 
 

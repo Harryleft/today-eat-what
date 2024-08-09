@@ -100,7 +100,7 @@ class CanteenManagementGUI:
                    command=self.show_quick_selection_callback).grid(row=6,
                                                                     column=1,
                                                                     padx=(
-                                                                    5, 0),
+                                                                        5, 0),
                                                                     pady=10,
                                                                     sticky='w')
         # 添加导出按钮
@@ -123,14 +123,16 @@ class CanteenManagementGUI:
             "canteens": []
         }
         for stall in stalls:
-            canteen = next((c for c in data["canteens"] if c["name"] == stall.canteen_name), None)
+            canteen = next((c for c in data["canteens"] if
+                            c["name"] == stall.canteen_name), None)
             if not canteen:
                 canteen = {
                     "name": stall.canteen_name,
                     "floors": []
                 }
                 data["canteens"].append(canteen)
-            floor = next((f for f in canteen["floors"] if f["number"] == stall.floor_number), None)
+            floor = next((f for f in canteen["floors"] if
+                          f["number"] == stall.floor_number), None)
             if not floor:
                 floor = {
                     "number": stall.floor_number,
@@ -141,7 +143,8 @@ class CanteenManagementGUI:
 
         file_path = filedialog.asksaveasfilename(defaultextension=".json",
                                                  initialfile="canteens_dataset.json",
-                                                 filetypes=[("JSON files", "*.json")])
+                                                 filetypes=[
+                                                     ("JSON files", "*.json")])
         if file_path:
             with open(file_path, 'w', encoding='utf-8') as f:
                 json.dump(data, f, ensure_ascii=False, indent=4)
@@ -151,7 +154,8 @@ class CanteenManagementGUI:
 
     def import_from_json(self):
         """Imports the canteen data from a JSON file."""
-        file_path = filedialog.askopenfilename(filetypes=[("JSON files", "*.json")])
+        file_path = filedialog.askopenfilename(
+            filetypes=[("JSON files", "*.json")])
         if file_path:
             try:
                 with open(file_path, 'r', encoding='utf-8') as f:
@@ -159,9 +163,16 @@ class CanteenManagementGUI:
                 for canteen in data.get("canteens", []):
                     for floor in canteen.get("floors", []):
                         for stall in floor.get("stalls", []):
-                            self.db.add_stall(canteen["name"], floor["number"], stall)
-                self.load_stalls()
-                self.show_info("导入成功", "green")
+                            # Check if the stall already exists
+                            if self.db.stall_exists(canteen["name"],
+                                                    floor["number"],
+                                                    stall):
+                                self.show_info(f"已跳过重复项", "red")
+                            else:
+                                self.db.add_stall(canteen["name"],
+                                                  floor["number"], stall)
+                                self.load_stalls()
+                                self.show_info("导入成功", "green")
             except Exception as e:
                 self.show_info(f"导入失败: {str(e)}", "red")
         else:
@@ -235,7 +246,7 @@ class CanteenManagementGUI:
         stalls = self.db.get_all_stalls()
         for stall in stalls:
             self.tree.insert("", "end", values=(
-            stall.canteen_name, stall.floor_number, stall.stall_name))
+                stall.canteen_name, stall.floor_number, stall.stall_name))
 
     def clear_entries(self):
         """Clears the input fields."""

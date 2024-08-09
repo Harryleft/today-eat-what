@@ -160,3 +160,25 @@ class CanteenDatabase:
             return stalls
         finally:
             session.close()
+
+    def stall_exists(self, canteen_name, floor_number, stall_name):
+        """Checks if a stall exists in the database.
+
+        Args:
+            canteen_name (str): The name of the canteen.
+            floor_number (int): The floor number.
+            stall_name (str): The name of the stall.
+
+        Returns:
+            bool: True if the stall exists, False otherwise.
+        """
+        session = self.Session()
+        try:
+            count = session.query(CanteenInfo).filter_by(
+                canteen_name=canteen_name,
+                floor_number=floor_number,
+                stall_name=stall_name
+            ).count()
+            return count > 0
+        finally:
+            session.close()

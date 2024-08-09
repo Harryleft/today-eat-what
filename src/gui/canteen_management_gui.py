@@ -107,9 +107,8 @@ class CanteenManagementGUI:
             self.floor_combobox.grid()
 
     def show(self):
-        self.frame.grid(row=0, column=0, sticky="nsew")
-        self.master.grid_rowconfigure(0, weight=1)
-        self.master.grid_columnconfigure(0, weight=1)
+        self.frame.pack(fill="both", expand=True)
+        self.master.pack_propagate(False)
 
     def hide(self):
         self.frame.grid_forget()

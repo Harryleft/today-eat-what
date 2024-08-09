@@ -7,7 +7,8 @@ import random
 from sqlalchemy import create_engine, func
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import sessionmaker
-from db.models import Base, CanteenInfo
+from src.db.models import Base, CanteenInfo
+from src.config import DATABASE_PATH, DEFAULT_JSON_FILE
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -15,8 +16,8 @@ logger = logging.getLogger(__name__)
 
 class CanteenDatabase:
     def __init__(self):
-        self.db_file = 'canteens.db'
-        self.json_file = 'canteens_dataset.json'
+        self.db_file = DATABASE_PATH
+        self.json_file = DEFAULT_JSON_FILE
         self.engine = create_engine(f'sqlite:///{self.db_file}')
         self.Session = sessionmaker(bind=self.engine)
 
@@ -97,25 +98,20 @@ class CanteenDatabase:
     def random_select_from_canteen(self, canteen_name):
         session = self.Session()
         try:
-            results = session.query(CanteenInfo).filter_by(canteen_name=canteen_name).all()
+            results = session.query(CanteenInfo).filter_by(
+                canteen_name=canteen_name).all()
             if results:
                 result = random.choice(results)
-                return result.canteen_name, result.floor_number, result.stall_name
+                if result.floor_number is None or result.stall_name is None:
+                    return "请到后台管理界面添加相关信息"
+                return f"{result.canteen_name} {result.floor_number} {result.stall_name}"
             else:
-                return canteen_name, None, "没有可用的选项"
+                return "请到后台管理界面添加相关信息"
         except Exception as e:
             logger.error(f"Error in random_select_from_canteen: {str(e)}")
-            return canteen_name, None, f"选择时发生错误: {str(e)}"
+            return f"选择时发生错误: {str(e)}"
         finally:
             session.close()
-
-    # def get_all_canteens(self):
-    #     session = self.Session()
-    #     try:
-    #         canteens = session.query(CanteenInfo.canteen_name).distinct().all()
-    #         return [canteen[0] for canteen in canteens]
-    #     finally:
-    #         session.close()
 
     def add_stall(self, canteen_name, floor_number, stall_name):
         session = self.Session()

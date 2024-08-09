@@ -3,8 +3,8 @@
 import tkinter as tk
 from tkinter import ttk
 
-from config import CANTEEN_NAMES
-from db.canteen_db import CanteenDatabase
+from src.config import CANTEEN_NAMES
+from src.db.canteen_db import CanteenDatabase
 
 
 class QuickSelectionGUI:
@@ -37,7 +37,7 @@ class QuickSelectionGUI:
         self.result_text.pack(padx=5, pady=5, fill="both", expand=True)
 
         # 添加进入管理界面的按钮
-        ttk.Button(self.frame, text="进入管理界面", command=self.show_management_callback).pack(pady=10)
+        ttk.Button(self.frame, text="进入后台管理界面", command=self.show_management_callback).pack(pady=10)
 
     def show(self):
         self.frame.pack(fill="both", expand=True)
@@ -50,16 +50,22 @@ class QuickSelectionGUI:
         result = self.canteen_db.random_select_all()
         if result:
             self.display_result(result)
-        else:
-            self.display_result("没有可用的选项")
+            canteen, floor, stall = result.split()
+            if canteen == "龙祥街":
+                self.display_result(f"{canteen} {stall}")
+            else:
+                self.display_result(f"{canteen} {floor} {stall}")
 
     def random_select_from_canteen(self, canteen_name):
-        canteen, floor, stall = self.canteen_db.random_select_from_canteen(canteen_name)
-        if floor is not None:
-            result = f"{canteen} {floor}楼 {stall}"
+        result = self.canteen_db.random_select_from_canteen(canteen_name)
+        if "请到后台管理界面添加相关信息" in result or "选择时发生错误" in result:
+            self.display_result(result)
         else:
-            result = f"{canteen}: {stall}"
-        self.display_result(result)
+            canteen, floor, stall = result.split()
+            if canteen == "龙祥街":
+                self.display_result(f"{canteen} {stall}")
+            else:
+                self.display_result(f"{canteen} {floor}楼 {stall}")
 
     def display_result(self, result):
         self.result_text.delete(1.0, tk.END)

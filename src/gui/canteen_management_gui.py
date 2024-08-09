@@ -3,8 +3,8 @@
 import tkinter as tk
 from tkinter import ttk
 
-from config import DEFAULT_FONT, CANTEEN_NAMES, CANTEEN_FLOORS
-from db.canteen_db import CanteenDatabase
+from src.config import DEFAULT_FONT, CANTEEN_NAMES, CANTEEN_FLOORS
+from src.db.canteen_db import CanteenDatabase
 
 
 class CanteenManagementGUI:
@@ -39,7 +39,8 @@ class CanteenManagementGUI:
         self.canteen_combobox = ttk.Combobox(self.frame, values=CANTEEN_NAMES,
                                              width=15)
         self.canteen_combobox.grid(row=2, column=1, sticky="w", padx=5, pady=2)
-
+        self.canteen_combobox.bind("<<ComboboxSelected>>",
+                                   self.toggle_floor_input)
 
         ttk.Label(self.frame, text="楼层:").grid(row=3, column=0, sticky="e",
                                                  padx=5, pady=2)
@@ -47,7 +48,7 @@ class CanteenManagementGUI:
                                              width=15)
         self.floor_combobox.grid(row=3, column=1, sticky="w", padx=5, pady=2)
 
-        ttk.Label(self.frame, text="档口名称:").grid(row=4, column=0,
+        ttk.Label(self.frame, text="菜品:").grid(row=4, column=0,
                                                      sticky="e", padx=5,
                                                      pady=2)
         self.stall_entry = ttk.Entry(self.frame, width=18)
@@ -98,6 +99,12 @@ class CanteenManagementGUI:
 
         self.frame.grid_columnconfigure(1, weight=1)
         self.frame.grid_rowconfigure(7, weight=1)
+    def toggle_floor_input(self, event):
+        selected_canteen = self.canteen_combobox.get()
+        if selected_canteen == "龙祥街":
+            self.floor_combobox.grid_remove()
+        else:
+            self.floor_combobox.grid()
 
     def show(self):
         self.frame.grid(row=0, column=0, sticky="nsew")
@@ -116,7 +123,10 @@ class CanteenManagementGUI:
 
     def add_stall(self):
         canteen = self.canteen_combobox.get()
-        floor = self.floor_combobox.get()
+        if canteen == "龙祥街":
+            floor = "0"
+        else:
+            floor = self.floor_combobox.get()
         stall = self.stall_entry.get()
 
         if not canteen or not floor or not stall:

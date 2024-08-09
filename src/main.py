@@ -1,8 +1,9 @@
+import os
+import sys
 import tkinter as tk
-from db.canteen_db import CanteenDatabase
-from canteen_management_gui import CanteenManagementGUI
-from quick_selection_gui import QuickSelectionGUI
-
+sys.path.append(os.path.join(os.path.dirname(__file__), 'src'))
+from src.gui.canteen_management_gui import CanteenManagementGUI
+from src.gui.quick_selection_gui import QuickSelectionGUI
 
 class MainApplication:
     def __init__(self, master):
@@ -12,8 +13,9 @@ class MainApplication:
 
         self.quick_selection_gui = QuickSelectionGUI(master,
                                                      self.show_management_gui)
-        self.management_gui = CanteenManagementGUI(master,
-                                                   self.show_quick_selection_gui)
+        self.management_gui = CanteenManagementGUI(
+            master, self.show_quick_selection_gui
+        )
 
         self.show_quick_selection_gui()  # 默认显示快速选择界面
 

@@ -74,6 +74,6 @@ class QuickSelectionGUI:
         self.result_text.insert(tk.END, result)
 
     def add_copyright_label(self):
-        copyright_label = tk.Label(self.master, text="© Dongchao Shen",
+        copyright_label = tk.Label(self.master, text="Copyright © 2024,Eat What. All rights reserved.",
                                    font=("Times New Roman", 10))
         copyright_label.pack(side="bottom", pady=5)
